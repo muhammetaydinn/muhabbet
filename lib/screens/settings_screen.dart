@@ -67,7 +67,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: ListTile(
                       leading: const Icon(Icons.help),
                       title: const Text(help),
-                      subtitle: const Text("Give Feedback , Privacy Policy , Terms of Use"),
+                      subtitle: const Text(
+                          "Give Feedback , Privacy Policy , Terms of Use"),
                       onTap: () {
                         Get.toNamed("/help_screen");
                       },
@@ -147,20 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   //     child: const Text(change),
                   //   ),
                   // ],
-                  ListTile(
-                    leading: const Icon(Icons.policy),
-                    title: const Text(privacy_policy),
-                    onTap: () {
-                      // launchUrl(Uri.parse(privacy_policy_launch_url));
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.gavel),
-                    title: const Text(terms_of_use),
-                    onTap: () {
-                      // launchUrl(Uri.parse(terms_of_use_launch_url));
-                    },
-                  ),
+
                   ListTile(
                     leading: const Icon(Icons.language),
                     title: const Text(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:muhabbet/model/contacts_model.dart';
 
 import '../constants.dart';
 import '../widgets/error_snackbar.dart';
@@ -15,6 +16,8 @@ class NewContactController extends GetxController {
 
   final TextEditingController contactIdController = TextEditingController();
   String get contactId => contactIdController.text;
+
+  var contactModel = Contacts().obs;
 
   saveContact() async {
     String? userId = Get.find<LoginController>().loginModel.value.data?.id;
@@ -37,10 +40,11 @@ class NewContactController extends GetxController {
 
         //TODO: REFRESH USER CONTACT LIST HERE
 
-        Navigator.pop(Get.context!);
         //clear text fields
         nameController.clear();
         contactIdController.clear();
+        fetchContact();
+        Navigator.pop(Get.context!);
       } else {
         getSnackBar(error, response.body, Colors.red, Colors.white);
       }
@@ -52,6 +56,32 @@ class NewContactController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+    }
+  }
+
+  Future<void> fetchContact() async {
+   
+    String? tokenFromModel =
+        Get.find<LoginController>().loginModel.value.access_token;
+    var headers = {
+      'Authorization': 'Bearer: $tokenFromModel',
+      'Content-Type': 'application/json'
+    };
+    String? userId = Get.find<LoginController>().loginModel.value.data?.id;
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse('$baseUrl/api/users/$userId/contacts'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        contactModel.value = Contacts.fromJson(json.decode(response.body));
+      } else {
+        Get.snackbar("Error", response.reasonPhrase.toString(),
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
 }

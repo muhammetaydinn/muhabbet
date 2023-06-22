@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AllController extends GetxController {
@@ -23,9 +22,4 @@ class AllController extends GetxController {
     //switches the value of filterToggle
     _filterToggle.value = !_filterToggle.value;
   }
-
-
-
-
-
 }

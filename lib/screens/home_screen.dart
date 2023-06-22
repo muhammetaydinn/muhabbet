@@ -1,18 +1,23 @@
 //home screen
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:muhabbet/utils/theme_data.dart';
+import 'package:muhabbet/controller/new_contact_controller.dart';
 
 import '../constants.dart';
+import 'chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  NewContactController newContactController = Get.put(NewContactController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          newContactController.fetchContact();
           Get.toNamed("/contact_list");
         },
         child: const Icon(Icons.message_outlined),
@@ -43,30 +48,39 @@ class HomeScreen extends StatelessWidget {
       body: Center(
           child: Column(
         children: [
-          Expanded(child: ListView.builder(itemBuilder: (context, index) {
-            return ListTile(
-              onTap: () => Get.toNamed("/chat_screen"),
-              // whatsapp clone
-              leading: const CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(
-                    'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'),
-              ),
-              title: const Text('Title'),
-              subtitle: const Text('Subtitle'),
-              trailing: index % 4 == 0
-                  ? Icon(
-                      Icons.lock_outlined,
-                      color: primaryColor,
-                    )
-                  : index % 3 == 0
-                      ? Icon(
-                          Icons.timelapse_sharp,
-                          color: primaryColor,
-                        )
-                      : null,
-            );
-          }))
+          Expanded(
+            child: ListView.builder(
+                itemCount: 10,
+                // newContactController.contactModel.value.data?.length ?? 0,
+                itemBuilder: (context, index) {
+                  var name = faker.person.name();
+                  var image = faker.image.image();
+                  var sentence = faker.lorem.sentence();
+                  //add 3 listtile to listview
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          Get.context!,
+                          MaterialPageRoute(
+                              builder: (context) => ChatScreen(id: name)));
+                    },
+                    child: ListTile(
+                      // whatsapp clone
+                      leading: CircleAvatar(
+                          radius: 30, backgroundImage: NetworkImage(image)),
+                      title: Text(name),
+                      subtitle: Text(sentence),
+
+                      trailing: index % 4 == 0
+                          ? const Icon(
+                              Icons.lock_outlined,
+                              color: Colors.red,
+                            )
+                          : null,
+                    ),
+                  );
+                }),
+          ),
         ],
       )),
     );

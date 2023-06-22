@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:muhabbet/controller/new_contact_controller.dart';
 import 'package:muhabbet/controller/register_controller.dart';
 
 import '../constants.dart';
@@ -38,6 +39,10 @@ class LoginController extends GetxController {
       );
       _loading.value = false;
       if (response.statusCode == 200) {
+        NewContactController newContactController =
+            Get.put(NewContactController());
+        newContactController.fetchContact();
+
         _loading.value = false;
         loginModel.value = LoginModel.fromJson(response.body);
         box.write('token', loginModel.value.access_token);
